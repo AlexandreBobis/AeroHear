@@ -25,7 +25,7 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Installer le workload WinForms
-      run: dotnet workload install winforms
+      run: dotnet workload install windowsdesktop
 
     - name: 🛠️ Restaurer les dépendances
       run: dotnet restore
