@@ -1,0 +1,49 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Déclenchement uniquement sur un tag versionné (ex: v1.0.0)
+
+jobs:
+  build-release:
+    runs-on: windows-latest
+
+    env:
+      PROJECT_NAME: AeroHear
+      RUNTIME_ID: win-x64
+      FRAMEWORK: net8.0-windows
+      CONFIGURATION: Release
+
+    steps:
+    - name: 📥 Cloner le dépôt
+      uses: actions/checkout@v4
+
+    - name: 🧰 Installer .NET 8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: 🛠️ Restaurer les dépendances
+      run: dotnet restore
+
+    - name: 🧱 Build self-contained .exe
+      run: >
+        dotnet publish -c ${{ env.CONFIGURATION }}
+        -r ${{ env.RUNTIME_ID }}
+        --self-contained true
+        /p:PublishSingleFile=true
+        /p:IncludeAllContentForSelfExtract=true
+        /p:PublishTrimmed=false
+
+    - name: 📦 Créer archive ZIP
+      run: |
+        cd bin\${{ env.CONFIGURATION }}\${{ env.FRAMEWORK }}\${{ env.RUNTIME_ID }}\publish
+        Compress-Archive -Path * -DestinationPath ../../../${{ env.PROJECT_NAME }}-portable.zip
+
+    - name: 🚀 Créer une release GitHub avec l'archive
+      uses: softprops/action-gh-release@v2
+      with:
+        files: ./bin/${{ env.CONFIGURATION }}/${{ env.PROJECT_NAME }}-portable.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
