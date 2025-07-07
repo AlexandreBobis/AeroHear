@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'  # Déclenchement uniquement sur un tag versionné (ex: v1.0.0)
 
+permissions:
+  contents: write
+
 jobs:
   build-release:
     runs-on: windows-latest
