@@ -7,10 +7,10 @@ set CONFIG=Release
 set FRAMEWORK=net8.0-windows
 set RUNTIME=win-x64
 set OUTPUT=bin\%CONFIG%\%FRAMEWORK%\%RUNTIME%\publish
-set ZIP_NAME=%PROJECT_NAME%-portable.zip
+set ZIP_NAME=%PROJECT_NAME%.zip
 
 echo.
-echo 🔧 Build portable .exe for %PROJECT_NAME%
+echo 🔧 Build .exe for %PROJECT_NAME%
 echo -----------------------------------------
 
 REM === Restore & publish ===

@@ -1,14 +1,14 @@
-# 🎶 MultiBluetoothAudioPlayer
+# 🎶 AeroHear
 
 [![Download](https://img.shields.io/github/v/release/AlexandreBobis/AeroHear?label=⬇%20Download%20Latest&style=for-the-badge&color=blue)](https://github.com/AlexandreBobis/AeroHear/releases/latest)
 
-AeroHear est une application Windows en .NET 8 qui vous permet de diffuser de la musique **simultanément sur plusieurs appareils Bluetooth**, avec **visualisation audio intégrée**, outils de **synchronisation** et une interface simple à utiliser.
+AeroHear est une application qui vous permet de diffuser de la musique **simultanément sur plusieurs appareils Bluetooth**, avec **visualisation audio intégrée**, outils de **synchronisation** et une interface simple à utiliser.
 
 ---
 
 ## 📸 Capture d’écran
 
-![screenshot](Resources/screenshot.png) <!-- Remplace par ton image réelle -->
+![screenshot](Resources/screenshot.png)
 
 ---
 
@@ -43,6 +43,12 @@ AeroHear est une application Windows en .NET 8 qui vous permet de diffuser de la
 ```bash
 git clone https://github.com/AlexandreBobis/AeroHear.git
 cd AeroHear
+build.bat
+```
+
+Si le build n'a pas fonctionné:
+
+```bash
 dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
 ```
 
