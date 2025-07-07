@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace MultiBluetoothAudioPlayer
+namespace AeroHear
 {
     static class Program
     {
