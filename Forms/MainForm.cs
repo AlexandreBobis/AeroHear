@@ -14,6 +14,7 @@ namespace AeroHear.Forms
         private readonly MultiAudioPlayer _player = new();
         private readonly List<MMDevice> _devices = AudioDeviceManager.GetOutputDevices();
         private readonly List<CheckBox> _deviceCheckboxes = new();
+        private DelayCalibrationControl _delayCalibration;
 
         private string _audioFilePath = "";
 
@@ -67,23 +68,14 @@ namespace AeroHear.Forms
                 y += 25;
             }
 
-            var visualizer = new Visualizer
+            _delayCalibration = new DelayCalibrationControl(_devices)
             {
                 Left = 20,
                 Top = 270,
                 Width = 640,
-                Height = 160
+                Height = 180  // Increased height to accommodate all controls better
             };
-            Controls.Add(visualizer);
-
-            // Simulation de visualisation (sinus)
-            var timer = new Timer { Interval = 100 };
-            timer.Tick += (s, e) =>
-            {
-                var values = Enumerable.Range(0, 100).Select(i => (float)Math.Sin(i * 0.2)).ToArray();
-                visualizer.Update(values);
-            };
-            timer.Start();
+            Controls.Add(_delayCalibration);
         }
 
         private void BtnLoad_Click(object sender, EventArgs e)
@@ -118,7 +110,8 @@ namespace AeroHear.Forms
                 return;
             }
 
-            _player.PlayToDevices(selected, _audioFilePath);
+            var delays = _delayCalibration.GetDelays();
+            _player.PlayToDevices(selected, _audioFilePath, delays);
         }
 
         private void MainForm_Load(object sender, EventArgs e)

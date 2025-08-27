@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using NAudio.Wave;
 
 namespace AeroHear.Audio
@@ -8,8 +9,9 @@ namespace AeroHear.Audio
     {
         private readonly List<IWavePlayer> _players = new List<IWavePlayer>();
         private readonly List<WaveStream> _audioStreams = new List<WaveStream>();
+        private readonly object _lock = new object();
 
-        public void PlayToDevices(List<string> deviceIds, string filePath)
+        public void PlayToDevices(List<string> deviceIds, string filePath, Dictionary<string, int> deviceDelays = null)
         {
             Stop();
 
@@ -24,13 +26,22 @@ namespace AeroHear.Audio
 
                 try
                 {
-                    var reader = new AudioFileReader(filePath);
-                    var outputDevice = new WaveOutEvent { DeviceNumber = deviceNumber };
-                    outputDevice.Init(reader);
-                    outputDevice.Play();
-
-                    _players.Add(outputDevice);
-                    _audioStreams.Add(reader);
+                    var delay = deviceDelays?.ContainsKey(id) == true ? deviceDelays[id] : 0;
+                    
+                    if (delay > 0)
+                    {
+                        // Play with delay using Task.Run to avoid blocking
+                        Task.Run(async () =>
+                        {
+                            await Task.Delay(delay);
+                            PlayToSingleDevice(deviceNumber, filePath);
+                        });
+                    }
+                    else
+                    {
+                        // Play immediately
+                        PlayToSingleDevice(deviceNumber, filePath);
+                    }
                 }
                 catch
                 {
@@ -40,21 +51,45 @@ namespace AeroHear.Audio
             }
         }
 
+        private void PlayToSingleDevice(int deviceNumber, string filePath)
+        {
+            try
+            {
+                var reader = new AudioFileReader(filePath);
+                var outputDevice = new WaveOutEvent { DeviceNumber = deviceNumber };
+                outputDevice.Init(reader);
+                outputDevice.Play();
+
+                lock (_lock)
+                {
+                    _players.Add(outputDevice);
+                    _audioStreams.Add(reader);
+                }
+            }
+            catch
+            {
+                // If device fails to initialize, skip it
+            }
+        }
+
         public void Stop()
         {
-            foreach (var player in _players)
+            lock (_lock)
             {
-                player.Stop();
-                player.Dispose();
-            }
+                foreach (var player in _players)
+                {
+                    player.Stop();
+                    player.Dispose();
+                }
 
-            foreach (var stream in _audioStreams)
-            {
-                stream.Dispose();
-            }
+                foreach (var stream in _audioStreams)
+                {
+                    stream.Dispose();
+                }
 
-            _players.Clear();
-            _audioStreams.Clear();
+                _players.Clear();
+                _audioStreams.Clear();
+            }
         }
 
         private int GetDeviceNumber(string deviceName)
