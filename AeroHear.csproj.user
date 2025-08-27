@@ -5,8 +5,8 @@
     <Compile Update="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Utils\Visualizer.cs">
-      <SubType>Component</SubType>
+    <Compile Update="Utils\DelayCalibrationControl.cs">
+      <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>
 </Project>

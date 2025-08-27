@@ -7,7 +7,7 @@ using NAudio.CoreAudioApi;
 
 namespace AeroHear.Utils
 {
-    public class DelayCalibrationControl : Control
+    public class DelayCalibrationControl : UserControl
     {
         private readonly Dictionary<string, int> _deviceDelays = new();
         private readonly List<MMDevice> _devices;
