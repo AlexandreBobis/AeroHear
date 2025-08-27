@@ -90,7 +90,7 @@ namespace AeroHear.Forms
         {
             using var dlg = new OpenFileDialog
             {
-                Filter = "Fichiers audio (*.mp3;*.wav)|*.mp3;*.wav"
+                Filter = "Fichiers audio (*.mp3;*.wav;*.flac)|*.mp3;*.wav;*.flac|Tous les fichiers (*.*)|*.*"
             };
             if (dlg.ShowDialog() == DialogResult.OK)
             {

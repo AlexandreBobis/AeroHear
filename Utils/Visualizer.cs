@@ -20,7 +20,7 @@ namespace AeroHear.Utils
             g.Clear(Color.Black);
             if (_values.Length == 0) return;
 
-            var pen = new Pen(Color.Lime, 1);
+            using var pen = new Pen(Color.Lime, 1);
             int width = ClientSize.Width;
             int height = ClientSize.Height;
 

@@ -15,13 +15,28 @@ namespace AeroHear.Audio
 
             foreach (var id in deviceIds)
             {
-                var reader = new AudioFileReader(filePath);
-                var outputDevice = new WaveOutEvent { DeviceNumber = GetDeviceNumber(id) };
-                outputDevice.Init(reader);
-                outputDevice.Play();
+                var deviceNumber = GetDeviceNumber(id);
+                if (deviceNumber == -1)
+                {
+                    // Skip devices that cannot be found
+                    continue;
+                }
 
-                _players.Add(outputDevice);
-                _audioStreams.Add(reader);
+                try
+                {
+                    var reader = new AudioFileReader(filePath);
+                    var outputDevice = new WaveOutEvent { DeviceNumber = deviceNumber };
+                    outputDevice.Init(reader);
+                    outputDevice.Play();
+
+                    _players.Add(outputDevice);
+                    _audioStreams.Add(reader);
+                }
+                catch
+                {
+                    // If device fails to initialize, skip it
+                    continue;
+                }
             }
         }
 
