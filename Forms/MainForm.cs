@@ -45,11 +45,11 @@ namespace AeroHear.Forms
             btnTest.Click += async (s, e) =>
             {
                 int ms = await LatencyTester.EstimateLatencyAsync(() => System.Media.SystemSounds.Beep.Play());
-                MessageBox.Show($"Latence estimée : {ms} ms");
+                MessageBox.Show($"Latence estimÃ©e : {ms} ms");
             };
             Controls.Add(btnTest);
 
-            var grp = new GroupBox { Text = "Périphériques Bluetooth", Top = 50, Left = 20, Width = 650, Height = 200 };
+            var grp = new GroupBox { Text = "PÃ©riphÃ©riques Bluetooth", Top = 50, Left = 20, Width = 650, Height = 200 };
             Controls.Add(grp);
 
             int y = 20;
@@ -95,7 +95,7 @@ namespace AeroHear.Forms
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 _audioFilePath = dlg.FileName;
-                MessageBox.Show("Fichier chargé : " + Path.GetFileName(_audioFilePath));
+                MessageBox.Show("Fichier chargÃ© : " + Path.GetFileName(_audioFilePath));
             }
         }
 
@@ -114,7 +114,7 @@ namespace AeroHear.Forms
 
             if (selected.Count == 0)
             {
-                MessageBox.Show("Veuillez sélectionner au moins un périphérique Bluetooth.");
+                MessageBox.Show("Veuillez sÃ©lectionner au moins un pÃ©riphÃ©rique Bluetooth.");
                 return;
             }
 

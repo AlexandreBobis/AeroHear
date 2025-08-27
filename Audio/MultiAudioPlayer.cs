@@ -44,13 +44,7 @@ namespace AeroHear.Audio
 
         private int GetDeviceNumber(string deviceName)
         {
-            for (int i = 0; i < WaveOut.DeviceCount; i++)
-            {
-                var caps = WaveOut.GetCapabilities(i);
-                if (caps.ProductName == deviceName)
-                    return i;
-            }
-            return -1;
+            return AudioDeviceManager.GetWaveOutDeviceNumber(deviceName);
         }
     }
 }
