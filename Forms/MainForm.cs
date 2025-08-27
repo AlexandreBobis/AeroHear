@@ -73,7 +73,7 @@ namespace AeroHear.Forms
                 Left = 20,
                 Top = 270,
                 Width = 640,
-                Height = 160
+                Height = 180  // Increased height to accommodate all controls better
             };
             Controls.Add(_delayCalibration);
         }

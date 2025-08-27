@@ -9,6 +9,7 @@ namespace AeroHear.Audio
     {
         private readonly List<IWavePlayer> _players = new List<IWavePlayer>();
         private readonly List<WaveStream> _audioStreams = new List<WaveStream>();
+        private readonly object _lock = new object();
 
         public void PlayToDevices(List<string> deviceIds, string filePath, Dictionary<string, int> deviceDelays = null)
         {
@@ -29,9 +30,10 @@ namespace AeroHear.Audio
                     
                     if (delay > 0)
                     {
-                        // Play with delay
-                        Task.Delay(delay).ContinueWith(_ =>
+                        // Play with delay using Task.Run to avoid blocking
+                        Task.Run(async () =>
                         {
+                            await Task.Delay(delay);
                             PlayToSingleDevice(deviceNumber, filePath);
                         });
                     }
@@ -58,8 +60,11 @@ namespace AeroHear.Audio
                 outputDevice.Init(reader);
                 outputDevice.Play();
 
-                _players.Add(outputDevice);
-                _audioStreams.Add(reader);
+                lock (_lock)
+                {
+                    _players.Add(outputDevice);
+                    _audioStreams.Add(reader);
+                }
             }
             catch
             {
@@ -69,19 +74,22 @@ namespace AeroHear.Audio
 
         public void Stop()
         {
-            foreach (var player in _players)
+            lock (_lock)
             {
-                player.Stop();
-                player.Dispose();
-            }
+                foreach (var player in _players)
+                {
+                    player.Stop();
+                    player.Dispose();
+                }
 
-            foreach (var stream in _audioStreams)
-            {
-                stream.Dispose();
-            }
+                foreach (var stream in _audioStreams)
+                {
+                    stream.Dispose();
+                }
 
-            _players.Clear();
-            _audioStreams.Clear();
+                _players.Clear();
+                _audioStreams.Clear();
+            }
         }
 
         private int GetDeviceNumber(string deviceName)
