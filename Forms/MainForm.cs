@@ -27,8 +27,8 @@ namespace AeroHear.Forms
         private void InitializeUI()
         {
             Text = "AeroHear";
-            Width = 700;
-            Height = 520; // Increased to accommodate larger calibration control
+            Width = 720;
+            Height = 580; // Increased to accommodate dynamic calibration control height
 
             var btnLoad = new Button { Text = "Charger audio", Top = 10, Left = 20, Width = 120 };
             btnLoad.Click += BtnLoad_Click;
@@ -72,8 +72,8 @@ namespace AeroHear.Forms
             {
                 Left = 20,
                 Top = 270,
-                Width = 640,
-                Height = 200  // Increased height to accommodate volume controls and auto calibration button
+                Width = 650
+                // Height is now set dynamically by the control itself
             };
             Controls.Add(_delayCalibration);
         }

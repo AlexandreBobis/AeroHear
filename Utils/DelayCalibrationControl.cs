@@ -176,14 +176,18 @@ namespace AeroHear.Utils
                 Text = "Calibrage auto",
                 Left = 120,
                 Top = y + 10,
-                Width = 100,
-                Height = 30
+                Width = 120,
+                Height = 30,
+                BackColor = Color.LightBlue
             };
             autoCalibButton.Click += async (s, e) =>
             {
                 await PerformAutoCalibration();
             };
             Controls.Add(autoCalibButton);
+
+            // Set the control height to accommodate all content
+            Height = y + 60; // Enough space for buttons + padding
         }
 
         public Dictionary<string, int> GetDelays()
