@@ -26,7 +26,7 @@ AeroHear est une application qui vous permet de diffuser de la musique **simulta
 
 > ✅ Aucune installation requise — application autonome.
 
-- 📥 [Télécharger l'application (.zip)](https://github.com/AlexandreBobis/AeroHear/releases/latest/download/AeroHear-portable.zip)
+- 📥 [Télécharger l'application (.zip)](https://github.com/AlexandreBobis/AeroHear/releases/latest/download/AeroHear.zip)
 
 ---
 
