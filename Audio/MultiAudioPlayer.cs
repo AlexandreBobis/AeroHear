@@ -11,7 +11,7 @@ namespace AeroHear.Audio
         private readonly List<WaveStream> _audioStreams = new List<WaveStream>();
         private readonly object _lock = new object();
 
-        public void PlayToDevices(List<string> deviceIds, string filePath, Dictionary<string, int> deviceDelays = null)
+        public void PlayToDevices(List<string> deviceIds, string filePath, Dictionary<string, int> deviceDelays = null, Dictionary<string, float> deviceVolumes = null)
         {
             Stop();
 
@@ -27,6 +27,7 @@ namespace AeroHear.Audio
                 try
                 {
                     var delay = deviceDelays?.ContainsKey(id) == true ? deviceDelays[id] : 0;
+                    var volume = deviceVolumes?.ContainsKey(id) == true ? deviceVolumes[id] : 1.0f;
                     
                     if (delay > 0)
                     {
@@ -34,13 +35,13 @@ namespace AeroHear.Audio
                         Task.Run(async () =>
                         {
                             await Task.Delay(delay);
-                            PlayToSingleDevice(deviceNumber, filePath);
+                            PlayToSingleDevice(deviceNumber, filePath, volume);
                         });
                     }
                     else
                     {
                         // Play immediately
-                        PlayToSingleDevice(deviceNumber, filePath);
+                        PlayToSingleDevice(deviceNumber, filePath, volume);
                     }
                 }
                 catch
@@ -51,11 +52,12 @@ namespace AeroHear.Audio
             }
         }
 
-        private void PlayToSingleDevice(int deviceNumber, string filePath)
+        private void PlayToSingleDevice(int deviceNumber, string filePath, float volume = 1.0f)
         {
             try
             {
                 var reader = new AudioFileReader(filePath);
+                reader.Volume = Math.Max(0.0f, Math.Min(1.0f, volume)); // Clamp volume between 0 and 1
                 var outputDevice = new WaveOutEvent { DeviceNumber = deviceNumber };
                 outputDevice.Init(reader);
                 outputDevice.Play();

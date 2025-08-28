@@ -28,7 +28,7 @@ namespace AeroHear.Forms
         {
             Text = "AeroHear";
             Width = 700;
-            Height = 500;
+            Height = 520; // Increased to accommodate larger calibration control
 
             var btnLoad = new Button { Text = "Charger audio", Top = 10, Left = 20, Width = 120 };
             btnLoad.Click += BtnLoad_Click;
@@ -73,7 +73,7 @@ namespace AeroHear.Forms
                 Left = 20,
                 Top = 270,
                 Width = 640,
-                Height = 180  // Increased height to accommodate all controls better
+                Height = 200  // Increased height to accommodate volume controls and auto calibration button
             };
             Controls.Add(_delayCalibration);
         }
@@ -111,7 +111,8 @@ namespace AeroHear.Forms
             }
 
             var delays = _delayCalibration.GetDelays();
-            _player.PlayToDevices(selected, _audioFilePath, delays);
+            var volumes = _delayCalibration.GetVolumes();
+            _player.PlayToDevices(selected, _audioFilePath, delays, volumes);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
