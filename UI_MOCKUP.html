@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroHear - Interface avec Spotify</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        .window {
+            width: 700px;
+            height: 700px;
+            background-color: #f0f0f0;
+            border: 2px solid #0078d4;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .title-bar {
+            background-color: #0078d4;
+            color: white;
+            padding: 8px;
+            margin: -10px -10px 10px -10px;
+            border-radius: 6px 6px 0 0;
+            font-weight: bold;
+        }
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 8px 16px;
+            border: 1px solid #ccc;
+            background-color: #e1e1e1;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        button:hover {
+            background-color: #d0d0d0;
+        }
+        .spotify-section {
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .spotify-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .spotify-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .status-connected {
+            color: green;
+            font-size: 12px;
+        }
+        .status-disconnected {
+            color: red;
+            font-size: 12px;
+        }
+        .search-box {
+            width: 300px;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .track-list {
+            width: 540px;
+            height: 80px;
+            border: 1px solid #ccc;
+            background-color: white;
+            margin: 10px 0;
+            padding: 5px;
+            overflow-y: auto;
+            font-size: 12px;
+        }
+        .track-item {
+            padding: 2px;
+            cursor: pointer;
+        }
+        .track-item:hover {
+            background-color: #e0e0e0;
+        }
+        .device-section {
+            border: 2px solid #666;
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #f8f8f8;
+        }
+        .device-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .device-list {
+            max-height: 140px;
+            overflow-y: auto;
+        }
+        .device-item {
+            margin: 5px 0;
+            font-size: 12px;
+        }
+        .delay-section {
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .delay-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .delay-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 12px;
+        }
+        .delay-input {
+            width: 80px;
+            padding: 2px;
+            border: 1px solid #ccc;
+        }
+        .status-message {
+            color: blue;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="window">
+        <div class="title-bar">🎶 AeroHear</div>
+        
+        <div class="control-buttons">
+            <button>Charger audio</button>
+            <button>Lire</button>
+            <button>Stop</button>
+            <button>Tester latence</button>
+        </div>
+
+        <!-- Nouvelle section Spotify -->
+        <div class="spotify-section">
+            <div class="spotify-title">🎵 Intégration Spotify</div>
+            
+            <div class="spotify-controls">
+                <button>Se connecter</button>
+                <span class="status-disconnected">Non connecté</span>
+            </div>
+            
+            <div class="spotify-controls">
+                <input type="text" class="search-box" placeholder="Rechercher une chanson..." disabled>
+                <button disabled>Rechercher</button>
+            </div>
+            
+            <div class="track-list" style="color: #999; text-align: center; display: flex; align-items: center; justify-content: center;">
+                Connectez-vous à Spotify pour rechercher des pistes
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <button disabled>Jouer la sélection</button>
+                <span class="status-message">Prêt</span>
+            </div>
+        </div>
+
+        <div class="device-section">
+            <div class="device-title">Périphériques Bluetooth</div>
+            <div class="device-list">
+                <div class="device-item">
+                    <input type="checkbox"> Haut-parleurs (Steam Streaming Microphone)
+                </div>
+                <div class="device-item">
+                    <input type="checkbox" checked> Speaker (Realtek(R) Audio)
+                </div>
+                <div class="device-item">
+                    <input type="checkbox" checked> Haut-parleurs (Steam Streaming Speakers)
+                </div>
+                <div class="device-item">
+                    <input type="checkbox"> Casque (2- WH-CH520)
+                </div>
+            </div>
+        </div>
+
+        <div class="delay-section">
+            <div class="delay-title">Calibrage des délais (ms)</div>
+            <div class="delay-item">
+                <span>Haut-parleurs (Steam Streaming Microphone)</span>
+                <div>
+                    <input type="number" class="delay-input" value="0" min="0" max="2000" step="10"> ms
+                </div>
+            </div>
+            <div class="delay-item">
+                <span>Speaker (Realtek(R) Audio)</span>
+                <div>
+                    <input type="number" class="delay-input" value="0" min="0" max="2000" step="10"> ms
+                </div>
+            </div>
+            <div class="delay-item">
+                <span>Haut-parleurs (Steam Streaming Speakers)</span>
+                <div>
+                    <input type="number" class="delay-input" value="0" min="0" max="2000" step="10"> ms
+                </div>
+            </div>
+            <div style="margin-top: 10px;">
+                <button>Réinitialiser</button>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 20px; max-width: 700px;">
+        <h3>🎵 Nouvelles fonctionnalités Spotify :</h3>
+        <ul>
+            <li><strong>Authentification OAuth</strong> - Connexion sécurisée à votre compte Spotify</li>
+            <li><strong>Recherche de pistes</strong> - Trouvez vos chansons préférées dans le catalogue Spotify</li>
+            <li><strong>Aperçus de 30 secondes</strong> - Écoutez des extraits avant de jouer sur vos appareils</li>
+            <li><strong>Intégration transparente</strong> - Utilisez les pistes Spotify avec le système multi-périphérique existant</li>
+            <li><strong>Gestion automatique</strong> - Téléchargement et nettoyage automatique des fichiers temporaires</li>
+        </ul>
+        
+        <p><strong>Note :</strong> L'intégration nécessite une configuration avec vos identifiants Spotify Developer. Consultez le fichier SPOTIFY_SETUP.md pour les instructions détaillées.</p>
+    </div>
+</body>
+</html>

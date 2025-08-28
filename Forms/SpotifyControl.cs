@@ -123,6 +123,23 @@ namespace AeroHear.Forms
 
         private async Task ConnectToSpotify()
         {
+            // Handle disconnect
+            if (_spotifyService.IsAuthenticated)
+            {
+                _spotifyService.Disconnect();
+                _connectionStatusLabel.Text = "Non connecté";
+                _connectionStatusLabel.ForeColor = Color.Red;
+                _connectButton.Text = "Se connecter";
+                _searchTextBox.Enabled = false;
+                _searchButton.Enabled = false;
+                _tracksListBox.Enabled = false;
+                _playSelectedButton.Enabled = false;
+                _tracksListBox.Items.Clear();
+                _statusLabel.Text = "Déconnecté de Spotify";
+                _statusLabel.ForeColor = Color.Blue;
+                return;
+            }
+
             _connectButton.Enabled = false;
             _statusLabel.Text = "Connexion à Spotify...";
             _statusLabel.ForeColor = Color.Orange;
@@ -158,6 +175,13 @@ namespace AeroHear.Forms
                     _statusLabel.Text = "Impossible de se connecter à Spotify";
                     _statusLabel.ForeColor = Color.Red;
                 }
+            }
+            catch (InvalidOperationException ex)
+            {
+                _statusLabel.Text = "Configuration Spotify requise - voir SPOTIFY_SETUP.md";
+                _statusLabel.ForeColor = Color.Red;
+                MessageBox.Show($"Configuration Spotify requise:\n\n{ex.Message}\n\nConsultez le fichier SPOTIFY_SETUP.md pour les instructions de configuration.", 
+                              "Configuration manquante", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {

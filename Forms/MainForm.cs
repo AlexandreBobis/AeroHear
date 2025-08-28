@@ -23,6 +23,23 @@ namespace AeroHear.Forms
         {
             InitializeComponent();
             InitializeUI();
+            
+            // Clean up old Spotify temporary files on startup
+            CleanupSpotifyFiles();
+        }
+
+        private void CleanupSpotifyFiles()
+        {
+            try
+            {
+                var spotifyHandler = new SpotifyAudioHandler();
+                spotifyHandler.CleanupTempFiles();
+                spotifyHandler.Dispose();
+            }
+            catch
+            {
+                // Ignore cleanup errors - Spotify integration is optional
+            }
         }
 
         private void InitializeUI()
@@ -52,19 +69,37 @@ namespace AeroHear.Forms
             Controls.Add(btnTest);
 
             // Spotify Control
-            _spotifyControl = new SpotifyControl
+            try
             {
-                Left = 20,
-                Top = 50,
-                Width = 640,
-                Height = 200
-            };
-            _spotifyControl.TrackSelected += (s, filePath) =>
+                _spotifyControl = new SpotifyControl
+                {
+                    Left = 20,
+                    Top = 50,
+                    Width = 640,
+                    Height = 200
+                };
+                _spotifyControl.TrackSelected += (s, filePath) =>
+                {
+                    _audioFilePath = filePath;
+                    MessageBox.Show("Piste Spotify chargée et prête à jouer!");
+                };
+                Controls.Add(_spotifyControl);
+            }
+            catch (Exception ex)
             {
-                _audioFilePath = filePath;
-                MessageBox.Show("Piste Spotify chargée et prête à jouer!");
-            };
-            Controls.Add(_spotifyControl);
+                // If Spotify control fails to initialize, show a message but continue
+                var errorLabel = new Label
+                {
+                    Text = $"Intégration Spotify indisponible: {ex.Message}",
+                    Left = 20,
+                    Top = 50,
+                    Width = 640,
+                    Height = 40,
+                    ForeColor = Color.Red,
+                    BorderStyle = BorderStyle.FixedSingle
+                };
+                Controls.Add(errorLabel);
+            }
 
             var grp = new GroupBox { Text = "Périphériques Bluetooth", Top = 260, Left = 20, Width = 650, Height = 200 };
             Controls.Add(grp);
@@ -133,6 +168,16 @@ namespace AeroHear.Forms
         private void MainForm_Load(object sender, EventArgs e)
         {
 
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _player?.Stop();
+                _spotifyControl?.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }
