@@ -44,6 +44,26 @@ jobs:
         cd bin\${{ env.CONFIGURATION }}\${{ env.FRAMEWORK }}\${{ env.RUNTIME_ID }}\publish
         Compress-Archive -Path * -DestinationPath ../../../${{ env.PROJECT_NAME }}.zip
 
+    - name: 🗑️ Supprimer les anciennes releases
+      shell: pwsh
+      run: |
+        # Obtenir toutes les releases existantes
+        $releases = gh release list --limit 100 --json tagName,id
+        $releasesData = $releases | ConvertFrom-Json
+        
+        # Si il y a des releases, les supprimer
+        if ($releasesData.Count -gt 0) {
+          Write-Host "Suppression de $($releasesData.Count) ancienne(s) release(s)..."
+          foreach ($release in $releasesData) {
+            Write-Host "Suppression de la release: $($release.tagName)"
+            gh release delete $release.tagName --yes --cleanup-tag
+          }
+        } else {
+          Write-Host "Aucune ancienne release à supprimer."
+        }
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: 🚀 Créer une release GitHub avec l'archive
       uses: softprops/action-gh-release@v2
       with:
