@@ -8,7 +8,7 @@
             // 
             // MainForm
             // 
-            ClientSize = new System.Drawing.Size(282, 253);
+            ClientSize = new System.Drawing.Size(720, 550);
             Name = "MainForm";
             Load += MainForm_Load;
             ResumeLayout(false);
