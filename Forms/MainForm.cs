@@ -15,6 +15,7 @@ namespace AeroHear.Forms
         private readonly List<MMDevice> _devices = AudioDeviceManager.GetOutputDevices();
         private readonly List<CheckBox> _deviceCheckboxes = new();
         private DelayCalibrationControl _delayCalibration;
+        private SpotifyControl _spotifyControl;
 
         private string _audioFilePath = "";
 
@@ -28,7 +29,7 @@ namespace AeroHear.Forms
         {
             Text = "AeroHear";
             Width = 700;
-            Height = 500;
+            Height = 700; // Increased height to accommodate Spotify controls
 
             var btnLoad = new Button { Text = "Charger audio", Top = 10, Left = 20, Width = 120 };
             btnLoad.Click += BtnLoad_Click;
@@ -50,7 +51,22 @@ namespace AeroHear.Forms
             };
             Controls.Add(btnTest);
 
-            var grp = new GroupBox { Text = "Périphériques Bluetooth", Top = 50, Left = 20, Width = 650, Height = 200 };
+            // Spotify Control
+            _spotifyControl = new SpotifyControl
+            {
+                Left = 20,
+                Top = 50,
+                Width = 640,
+                Height = 200
+            };
+            _spotifyControl.TrackSelected += (s, filePath) =>
+            {
+                _audioFilePath = filePath;
+                MessageBox.Show("Piste Spotify chargée et prête à jouer!");
+            };
+            Controls.Add(_spotifyControl);
+
+            var grp = new GroupBox { Text = "Périphériques Bluetooth", Top = 260, Left = 20, Width = 650, Height = 200 };
             Controls.Add(grp);
 
             int y = 20;
@@ -71,7 +87,7 @@ namespace AeroHear.Forms
             _delayCalibration = new DelayCalibrationControl(_devices)
             {
                 Left = 20,
-                Top = 270,
+                Top = 480,
                 Width = 640,
                 Height = 180  // Increased height to accommodate all controls better
             };
@@ -95,7 +111,7 @@ namespace AeroHear.Forms
         {
             if (string.IsNullOrEmpty(_audioFilePath))
             {
-                MessageBox.Show("Veuillez charger un fichier audio.");
+                MessageBox.Show("Veuillez charger un fichier audio ou sélectionner une piste Spotify.");
                 return;
             }
 

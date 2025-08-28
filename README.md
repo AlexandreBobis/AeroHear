@@ -15,6 +15,7 @@ AeroHear est une application qui vous permet de diffuser de la musique **simulta
 ## ⚙️ Fonctionnalités
 
 - 🔊 Lecture audio sur plusieurs périphériques Bluetooth
+- 🎵 **Intégration Spotify** - Recherchez et jouez vos pistes préférées depuis Spotify
 - 🖼️ Visualisation spectrale en temps réel
 - ⏱️ Test et réglage de la synchronisation
 - 📁 Lecture de fichiers MP3, WAV, FLAC
@@ -37,6 +38,7 @@ AeroHear est une application qui vous permet de diffuser de la musique **simulta
 - [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download)
 - Windows 10 ou 11
 - Visual Studio 2022 (facultatif, mais recommandé)
+- **Compte développeur Spotify** (pour l'intégration Spotify) - voir [SPOTIFY_SETUP.md](SPOTIFY_SETUP.md)
 
 ### 🚀 Compilation
 
@@ -51,6 +53,10 @@ Si le build n'a pas fonctionné:
 ```bash
 dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
 ```
+
+### 🎵 Configuration Spotify
+
+Pour utiliser l'intégration Spotify, consultez le guide de configuration : [SPOTIFY_SETUP.md](SPOTIFY_SETUP.md)
 
 ## 🤝 Contribuer
 
