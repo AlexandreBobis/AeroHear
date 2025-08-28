@@ -15,10 +15,10 @@ AeroHear est une application qui vous permet de diffuser de la musique **simulta
 ## ⚙️ Fonctionnalités
 
 - 🔊 Lecture audio sur plusieurs périphériques Bluetooth
-- 🖼️ Visualisation spectrale en temps réel
 - ⏱️ Test et réglage de la synchronisation
 - 📁 Lecture de fichiers MP3, WAV, FLAC
 - 🧩 Interface WinForms simple et portable
+-    Calibrage automatique du délai de latence
 
 ---
 
